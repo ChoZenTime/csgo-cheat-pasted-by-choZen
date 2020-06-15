@@ -1,10 +1,10 @@
 
 # csgo-cheat-pasted-by-choZen  
  
-##  thx to alphauc for og sdk
+##  thx to alphauc for og sdk [sdk](https://github.com/alphauc/sdk)
 ##  thx too kuciak666 for [aristois](https://github.com/designer1337/aristois-legit)
 
-and the updated version of: https://github.com/alphauc/sdk with some improvements, eg. undetected hooking library
+and the updated version of alphauc/sdk with some improvements, eg. undetected hooking library
 
 
 ## Changelog
