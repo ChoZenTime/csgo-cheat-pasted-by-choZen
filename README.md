@@ -9,7 +9,7 @@ and the updated version of: https://github.com/alphauc/sdk with some improvement
 
 ## Changelog
 + added imgui	                            //aristois
-+ added skinchanger fix				        //nskins
++ added skinchanger 				        //nskins
 + added glovechanger						//nskinz 				
 + added knifeanimation fix				    //nskins
 + added skins-greeny fix				    //nskins
