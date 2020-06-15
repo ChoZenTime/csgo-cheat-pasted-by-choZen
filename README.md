@@ -2,8 +2,7 @@
 # csgo-cheat-pasted-by-choZen  
  
 ##  thx to alphauc for og [sdk](https://github.com/alphauc/sdk)
-##  thx too kuciak666 for [aristois](https://github.com/designer1337/aristois-legit)
-# and the [updated ver. alphauc/sdk](https://github.com/designer1337/csgo-cheat-base) with undetected hooking etc.
+##  thx too kuciak666 for [aristois](https://github.com/designer1337/aristois-legit) and the [updated ver. alphauc/sdk](https://github.com/designer1337/csgo-cheat-base) with undetected hooking etc.
 
 
 ## Changelog
