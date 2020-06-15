@@ -26,8 +26,8 @@ and the updated version of: https://github.com/alphauc/sdk with some improvement
 + added speclist with OBS modes
 + added new visuals                         //aristois,deadcell,aimtux,etc..
 + added menu so for woldesp is a switch for dropped weapon esp name/icon
-++  2 hooks hooked for sv_pure bypass
 
++ +  2 hooks hooked for sv_pure bypass
 + + please use new configs so it dosen´t crash etc on you
 
 
