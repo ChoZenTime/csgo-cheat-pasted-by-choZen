@@ -23,6 +23,7 @@
 + added aimbot         	                    //aristois
 + added speclist with OBS modes
 + added new visuals                         //aristois,deadcell,aimtux,etc..
++ added fixed shoulder on skeleton esp
 + added menu so for woldesp is a switch for dropped weapon esp name/icon
 
 + +  2 hooks hooked for sv_pure bypass
