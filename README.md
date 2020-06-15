@@ -20,7 +20,7 @@ and the updated version of alphauc/sdk with some improvements, eg. undetected ho
 + added new weapon esp with names/icons 
 + added ambient light						//smefs_indigo 
 + added dlights
-+ added chams wit keysizes
++ added dme-chams with keysizes
 + added triggerbot	
 + added aimbot         	                    //aristois
 + added speclist with OBS modes
