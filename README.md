@@ -49,6 +49,7 @@ Press `END` key.
 ## Media
 ![image](https://imgur.com/X5vQfY2.png)
 ![image](https://imgur.com/Yhqxk4z.png)
-
+![image](https://i.imgur.com/71wZaKM.png)
+![image](https://i.imgur.com/V4TuJVn.png)
   
 my nickname is choZen on UC , Void and YouGame
