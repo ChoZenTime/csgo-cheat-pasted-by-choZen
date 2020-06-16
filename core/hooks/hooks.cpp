@@ -18,6 +18,10 @@ hooks::present::fn present_original = nullptr;
 hooks::reset::fn reset_original = nullptr;
 
 bool hooks::initialize() {
+	auto lock_cursor_target = reinterpret_cast<void*>(get_virtual(interfaces::surface, 67));
+	auto in_key_event_target = reinterpret_cast<void*>(get_virtual(interfaces::client, 21));
+	auto present_target = reinterpret_cast<void*>(get_virtual(interfaces::directx, 17));
+	auto reset_target = reinterpret_cast<void*>(get_virtual(interfaces::directx, 16));
 	auto create_move_target = reinterpret_cast<void*>(get_virtual(interfaces::clientmode, 24));
 	auto do_post_screen_effects_target = reinterpret_cast<void*>(get_virtual(interfaces::clientmode, 44));
 	auto paint_traverse_target = reinterpret_cast<void*>(get_virtual(interfaces::panel, 41));
@@ -26,10 +30,6 @@ bool hooks::initialize() {
 	auto scene_end_target = reinterpret_cast<void*>(get_virtual(interfaces::render_view, 9));
 	auto crc_server_check_target = reinterpret_cast<void*>(utilities::pattern_scan(ENGINE_DLL, sig_crc_server_check_target));
 	auto frame_stage_notify_target = reinterpret_cast<void*>(get_virtual(interfaces::client, 37));
-	auto lock_cursor_target = reinterpret_cast<void*>(get_virtual(interfaces::surface, 67));
-	auto in_key_event_target = reinterpret_cast<void*>(get_virtual(interfaces::client, 21));
-	auto present_target = reinterpret_cast<void*>(get_virtual(interfaces::directx, 17));
-	auto reset_target = reinterpret_cast<void*>(get_virtual(interfaces::directx, 16));
 	auto file_system_target = reinterpret_cast<void*>(get_virtual(interfaces::file_system, 128));
 	
 	
@@ -110,6 +110,75 @@ bool hooks::initialize() {
 void hooks::release() {
 	MH_Uninitialize();
 	MH_DisableHook(MH_ALL_HOOKS);
+}
+
+extern LRESULT ImGui_ImplDX9_WndProcHandler(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam);
+LRESULT __stdcall hooks::wndproc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) {
+	static bool pressed = false;
+
+	if (!pressed && GetAsyncKeyState(VK_INSERT)) {
+		pressed = true;
+	}
+	else if (pressed && !GetAsyncKeyState(VK_INSERT)) {
+		pressed = false;
+
+		menu.opened = !menu.opened;
+	}
+
+	if (menu.opened) {
+		interfaces::inputsystem->enable_input(false);
+
+	}
+	else if (!menu.opened) {
+		interfaces::inputsystem->enable_input(true);
+	}
+
+	if (menu.opened && ImGui_ImplDX9_WndProcHandler(hwnd, message, wparam, lparam))
+		return true;
+
+	return CallWindowProcA(wndproc_original, hwnd, message, wparam, lparam);
+}
+
+void __stdcall hooks::lock_cursor::hook() {
+	if (menu.opened) {
+		interfaces::surface->unlock_cursor();
+		return;
+	}
+	return lock_cursor_original(interfaces::surface);
+}
+
+int __fastcall hooks::in_key_event::hook(void* ecx, int edx, int event_code, int key_num, const char* current_binding) {
+	return in_key_event_original(event_code, key_num, current_binding);
+}
+
+static bool initialized = false;
+long __stdcall hooks::present::hook(IDirect3DDevice9* device, RECT* source_rect, RECT* dest_rect, HWND dest_window_override, RGNDATA* dirty_region) {
+	if (!initialized) {
+		menu.apply_fonts();
+		menu.setup_resent(device);
+		initialized = true;
+	}
+	if (initialized) {
+		menu.pre_render(device);
+		menu.post_render();
+
+		menu.run_popup();
+		menu.run();
+		menu.end_present(device);
+	}
+
+	return present_original(device, source_rect, dest_rect, dest_window_override, dirty_region);
+}
+
+long __stdcall hooks::reset::hook(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* present_parameters) {
+	if (!initialized)
+		reset_original(device, present_parameters);
+
+	menu.invalidate_objects();
+	long hr = reset_original(device, present_parameters);
+	menu.create_objects(device);
+
+	return hr;
 }
 
 bool __fastcall hooks::create_move::hook(void* ecx, void* edx, int input_sample_frametime, c_usercmd* cmd) {
@@ -241,75 +310,6 @@ void __stdcall hooks::frame_stage_notify::hook(int frame_stage) {
 	}
 
 	frame_stage_notify_original(interfaces::client, frame_stage);
-}
-
-extern LRESULT ImGui_ImplDX9_WndProcHandler(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam);
-LRESULT __stdcall hooks::wndproc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) {
-	static bool pressed = false;
-
-	if (!pressed && GetAsyncKeyState(VK_INSERT)) {
-		pressed = true;
-	}
-	else if (pressed && !GetAsyncKeyState(VK_INSERT)) {
-		pressed = false;
-
-		menu.opened = !menu.opened;
-	}
-
-	if (menu.opened) {
-		interfaces::inputsystem->enable_input(false);
-
-	}
-	else if (!menu.opened) {
-		interfaces::inputsystem->enable_input(true);
-	}
-
-	if (menu.opened && ImGui_ImplDX9_WndProcHandler(hwnd, message, wparam, lparam))
-		return true;
-
-	return CallWindowProcA(wndproc_original, hwnd, message, wparam, lparam);
-}
-
-void __stdcall hooks::lock_cursor::hook() {
-	if (menu.opened) {
-		interfaces::surface->unlock_cursor();
-		return;
-	}
-	return lock_cursor_original(interfaces::surface);
-}
-
-int __fastcall hooks::in_key_event::hook(void* ecx, int edx, int event_code, int key_num, const char* current_binding) {
-	return in_key_event_original(event_code, key_num, current_binding);
-}
-
-static bool initialized = false;
-long __stdcall hooks::present::hook(IDirect3DDevice9* device, RECT* source_rect, RECT* dest_rect, HWND dest_window_override, RGNDATA* dirty_region) {
-	if (!initialized) {
-		menu.apply_fonts();
-		menu.setup_resent(device);
-		initialized = true;
-	}
-	if (initialized) {
-		menu.pre_render(device);
-		menu.post_render();
-
-		menu.run_popup();
-		menu.run();
-		menu.end_present(device);
-	}
-
-	return present_original(device, source_rect, dest_rect, dest_window_override, dirty_region);
-}
-
-long __stdcall hooks::reset::hook(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* present_parameters) {
-	if (!initialized)
-		reset_original(device, present_parameters);
-
-	menu.invalidate_objects();
-	long hr = reset_original(device, present_parameters);
-	menu.create_objects(device);
-
-	return hr;
 }
 
 int __fastcall hooks::file_system::hook(void* ecx, void* edx){
