@@ -935,10 +935,10 @@ void c_menu::run() {
 					/*if (config_system.item.keybinds_selection == 0) {
 						ImGui::Hotkey("##edge jump key", &config_system.item.edge_jump_key, ImVec2(100, 20));
 					}
-					else*/ if (config_system.item.keybinds_selection == 1) {
+					else*/ if (config_system.item.keybinds_selection == 0) {
 						ImGui::Hotkey("##aimbot key", &config_system.item.aim_key, ImVec2(100, 20));
 					}
-					else if (config_system.item.keybinds_selection == 2) {
+					else if (config_system.item.keybinds_selection == 1) {
 						ImGui::Hotkey("##visuals key", &config_system.item.visuals_key, ImVec2(100, 20));
 					}
 					/*else if (config_system.item.keybinds_selection == 3) {
