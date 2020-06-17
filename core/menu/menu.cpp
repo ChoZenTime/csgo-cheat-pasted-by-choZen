@@ -446,9 +446,9 @@ void c_menu::run() {
 					ImGui::Checkbox("Team (Behind Wall)", &config_system.item.vis_chams_invis_teammate);
 					ImGui::ColorEdit4("Team (Behind Wall) Color", config_system.item.clr_chams_invis_teammate, ImGuiColorEditFlags_NoInputs);
 					ImGui::Spacing();
-					ImGui::Checkbox("Backtrack", &config_system.item.backtrack_visualize);
-					ImGui::ColorEdit4("Backtrack Color", config_system.item.clr_sleeve_chams, ImGuiColorEditFlags_NoInputs);
-					ImGui::Spacing();
+				    //ImGui::Checkbox("Backtrack", &config_system.item.backtrack_visualize);
+					//ImGui::ColorEdit4("Backtrack Color", config_system.item.clr_sleeve_chams, ImGuiColorEditFlags_NoInputs);
+					//ImGui::Spacing();
 				}
 				ImGui::EndChild(true);
 
