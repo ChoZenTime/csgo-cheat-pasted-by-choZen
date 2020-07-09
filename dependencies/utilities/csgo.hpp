@@ -4,7 +4,7 @@
 
 //main
 #define window_initialize hooks::window =FindWindow("Valve001", NULL)
-#define wndproc_initialize hooks::wndproc_original = reinterpret_cast<WNDPROC>(SetWindowLongW(hooks::window, GWL_WNDPROC, reinterpret_cast<LONG>(hooks::wndproc)))
+#define wndproc_initialize hooks::wndproc_original = reinterpret_cast<WNDPROC>(SetWindowLongW(window_initialize, GWL_WNDPROC, reinterpret_cast<LONG>(hooks::wndproc)))
 #define wndproc_release SetWindowLongW(FindWindowW(L"Valve001", NULL), GWL_WNDPROC, reinterpret_cast<LONG>(hooks::wndproc_original))
 
 //interfaces
